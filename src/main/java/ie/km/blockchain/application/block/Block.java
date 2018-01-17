@@ -1,6 +1,11 @@
-package ie.km.ripple.bc;
+package ie.km.blockchain.application.block;
 
-import ie.km.ripple.bc.MerkleTree.Node;
+import ie.km.blockchain.application.block.domain.Account;
+import ie.km.blockchain.application.block.domain.Transaction;
+import ie.km.blockchain.application.crypto.Encoder;
+import ie.km.blockchain.application.crypto.HashCash;
+import ie.km.blockchain.application.crypto.MerkleTree;
+import ie.km.blockchain.application.crypto.Node;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
@@ -8,7 +13,7 @@ import java.util.Set;
 
 public class Block {
 
-    public final static int MAX_NUM_TRANSACTIONS = 6;
+    private final static int MAX_NUM_TRANSACTIONS = 6;
 
     private final String previousHash;
 
@@ -22,8 +27,8 @@ public class Block {
 
     private int transactionCounter = 0;
 
-    public Block(byte[] previousHash) {
-        this.previousHash = String.valueOf(previousHash);
+    Block(byte[] previousHash) {
+        this.previousHash = new String(previousHash);
     }
 
     public boolean isBlockFull() {
@@ -33,9 +38,9 @@ public class Block {
     public String addTransaction(Transaction t) {
         if (!isBlockFull()) {
             transactionCounter++;
-            byte[] transHash = Hash.digest(t.toString().getBytes());
+            byte[] transHash = Encoder.digest(t.toString().getBytes());
 
-            String hashAsString = Hash.encode(transHash);
+            String hashAsString = Encoder.encode(transHash);
             transactionMap.put(transHash, t);
             System.out.println("Hash=" + hashAsString);
             return hashAsString;
@@ -45,18 +50,18 @@ public class Block {
     public Node mineBlock() {
         angela = new MerkleTree(transactionMap.keySet());
         root = angela.build();
-        System.out.println("Root hash=" + Hash.encode(root.getHash()));
+        System.out.println("Root hash=" + Encoder.encode(root.getHash()));
         proofOfWork = generateProofOfWork();
         return root;
     }
 
     private String generateProofOfWork() {
-        HashCash hc = new HashCash("1", 20, "170115", String.valueOf(previousHash + root.getHash()));
+        HashCash hc = new HashCash("1", 20, "170115", String.valueOf(previousHash + new String(root.getHash())));
         return hc.mint();
     }
 
     public boolean isMined() {
-        return proofOfWork == null ? false : true;
+        return proofOfWork != null;
     }
 
     public Set<byte[]> getTransactionHashList() {
@@ -74,10 +79,10 @@ public class Block {
         return transactionMap.size();
     }
 
-    protected static Block createGenesisBlock() throws NoSuchAlgorithmException {
+    protected static Block createGenesisBlock() {
         Block b = new Block("/mttCtevLaG1GsBa0azSACs9S5uoYw7xVy9QxfJwbiU=".getBytes());
-        b.addTransaction(new Transaction(Account.create(), Account.create(), 100l));
-        b.addTransaction(new Transaction(Account.create(), Account.create(), 200l));
+        b.addTransaction(new Transaction(Account.create(), Account.create(), 100L));
+        b.addTransaction(new Transaction(Account.create(), Account.create(), 200L));
         b.mineBlock();
         return b;
     }

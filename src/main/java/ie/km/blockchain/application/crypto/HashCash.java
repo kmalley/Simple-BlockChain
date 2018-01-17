@@ -1,11 +1,8 @@
-package ie.km.ripple.bc;
+package ie.km.blockchain.application.crypto;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Collections;
 import java.util.Random;
 import org.apache.commons.codec.binary.BinaryCodec;
-import sun.misc.BASE64Encoder;
 
 /**
  * Simple implementation of the HashCash algorithm.
@@ -60,7 +57,7 @@ public class HashCash {
 
         while (!binaryResult.startsWith(HASH_PREFIX)) {
             counter++;
-            byte[] hash = Hash.digest(generateHeader(counter).getBytes());
+            byte[] hash = Encoder.digest(generateHeader(counter).getBytes());
             binaryResult = BinaryCodec.toAsciiString(hash);
 
             if (counter % 100000 == 0) {
@@ -76,23 +73,14 @@ public class HashCash {
     }
 
     private String generateHeader(int counter) {
-        return new StringBuffer()
-                .append(version)
-                .append(':')
-                .append(numZeroBits)
-                .append(':')
-                .append(date)
-                .append(':')
-                .append(resource)
-                .append("::")
-                .append(randomString)
-                .append(Hash.encode(String.valueOf(counter).getBytes())).toString();
+        return version + ':' + numZeroBits + ':' + date + ':' + resource + "::" + randomString +
+                        Encoder.encode(String.valueOf(counter).getBytes());
     }
 
     private String generateEncodedRandomString() {
         byte[] b = new byte[NUM_RAND_CHARACTERS];
         new Random().nextBytes(b);
-        return Hash.encode(b);
+        return Encoder.encode(b);
     }
 
 }

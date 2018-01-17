@@ -1,4 +1,4 @@
-package ie.km.ripple.bc;
+package ie.km.blockchain.application.crypto;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -14,7 +14,8 @@ public class Encoder {
         try {
             md = MessageDigest.getInstance("SHA-256");
         } catch (NoSuchAlgorithmException e) {
-            
+          //
+          // SHA-256 is an allowed algorithm
         }
     }
 

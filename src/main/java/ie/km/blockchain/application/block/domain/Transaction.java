@@ -1,4 +1,4 @@
-package ie.km.ripple.bc;
+package ie.km.blockchain.application.block.domain;
 
 public class Transaction {
     private final Account source;
