@@ -1,15 +1,18 @@
 package ie.km.blockchain.application.block.domain;
 
-import java.util.Arrays;
-import java.util.List;
-
 public class TransactionInput {
     public String id;
-    public ScriptSig scriptSig;
-    private final List<TransactionOutput> outputs;
 
-    public TransactionInput(TransactionOutput...outputs) {
-        this.outputs = Arrays.asList(outputs);
+    //
+    // Proof of ownership
+    public ScriptSig scriptSig;
+
+    //
+    // Reference to previous transaction with un-spent amount
+    private final TransactionOutput outPoint;
+
+    public TransactionInput(TransactionOutput outPoint) {
+        this.outPoint= outPoint;
     }
 
     public String getId() {
