@@ -2,11 +2,11 @@ package ie.km.blockchain.application.crypto;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import sun.misc.BASE64Encoder;
+import java.util.Base64;
 
 public class Encoder {
 
-    private static BASE64Encoder encoder = new BASE64Encoder();
+    private static Base64.Encoder encoder = Base64.getEncoder();
 
     private static MessageDigest md;
 
@@ -20,7 +20,7 @@ public class Encoder {
     }
 
     public static String encode(byte[] data) {
-        return encoder.encode(data);
+        return encoder.encodeToString(data);
     }
 
     public static byte[] digest(byte[] data) {

@@ -1,12 +1,11 @@
 package ie.km.blockchain.application.block;
 
 import ie.km.blockchain.application.block.domain.Account;
-import ie.km.blockchain.application.block.domain.Transaction;
+import ie.km.blockchain.application.block.domain.SimpleTransaction;
 import ie.km.blockchain.application.crypto.Encoder;
 import ie.km.blockchain.application.crypto.HashCash;
 import ie.km.blockchain.application.crypto.MerkleTree;
 import ie.km.blockchain.application.crypto.Node;
-import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -17,7 +16,7 @@ public class Block {
 
     private final String previousHash;
 
-    private Map<byte[], Transaction> transactionMap = new HashMap<>();
+    private Map<byte[], SimpleTransaction> transactionMap = new HashMap<>();
 
     private MerkleTree angela;
 
@@ -35,7 +34,7 @@ public class Block {
         return (transactionCounter == MAX_NUM_TRANSACTIONS);
     }
 
-    public String addTransaction(Transaction t) {
+    public String addTransaction(SimpleTransaction t) {
         if (!isBlockFull()) {
             transactionCounter++;
             byte[] transHash = Encoder.digest(t.toString().getBytes());
@@ -81,8 +80,8 @@ public class Block {
 
     protected static Block createGenesisBlock() {
         Block b = new Block("/mttCtevLaG1GsBa0azSACs9S5uoYw7xVy9QxfJwbiU=".getBytes());
-        b.addTransaction(new Transaction(Account.create(), Account.create(), 100L));
-        b.addTransaction(new Transaction(Account.create(), Account.create(), 200L));
+        b.addTransaction(new SimpleTransaction(Account.create(), Account.create(), 100L));
+        b.addTransaction(new SimpleTransaction(Account.create(), Account.create(), 200L));
         b.mineBlock();
         return b;
     }

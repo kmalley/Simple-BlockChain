@@ -1,6 +1,6 @@
 package ie.km.blockchain.application.crypto;
 
-public  class Node {
+public class Node {
     private final Node left;
     private final Node right;
     private final byte[] hash;
